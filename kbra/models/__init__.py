@@ -1,0 +1,1 @@
+from kbra.models.contact import Contact

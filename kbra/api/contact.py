@@ -15,9 +15,9 @@ def get_contacts(request):
 @router.post("/", response={200: dict, 404: str})
 def create_contact(request, payload: ContactIn):
     # checks for unique email.
-    if Contact.objects.filter(email=payload.email).exclude(email__isnull=True, email="").exists():
+    if Contact.objects.filter(email=payload.email).exclude(Q(email__isnull=True) | Q(email="")).exists():
         return 404, "Could not create - duplicate email found, email must be unique."
-    if Contact.objects.filter(phone=payload.phone).exclude(phone__isnull=True, phone="").exists():
+    if Contact.objects.filter(phone=payload.phone).exclude(Q(phone__isnull=True), Q(phone="")).exists():
         return 404, "Could not create - duplicate phone found, phone must be unique."
     try:
         contact = Contact.objects.create(**payload.dict())
